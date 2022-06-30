@@ -18,6 +18,18 @@
 
 <!-- START: Page Vendor JS-->
 @auth
+
+<!-- Amazon -->
+
+
+
+
+
+
+
+
+
+
 <script src="{{asset('vendors/raphael/raphael.min.js')}}"></script>
 <script src="{{asset('vendors/morris/morris.min.js')}}"></script>
 <script src="{{asset('vendors/chartjs/Chart.min.js')}}"></script>

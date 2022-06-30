@@ -3,7 +3,7 @@
     <!-- START: Head-->
     <head>
         <meta charset="UTF-8">
-        <title>{{isset($title)?$title:'Dan TerryBerry'}}</title>
+        <title>{{isset($title)?$title:'Index'}}</title>
 
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}"> 
@@ -47,7 +47,7 @@
         <!-- START: Footer-->
         @auth
         <footer class="site-footer">
-            2021 &copy; {{env('APP_NAME')}} Dashboard
+            {{date("Y")}} &copy; {{env('APP_NAME')}} Dashboard
         </footer>
         @endauth
         <!-- END: Footer-->

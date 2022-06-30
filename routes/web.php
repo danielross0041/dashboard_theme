@@ -27,21 +27,15 @@ use App\Mail\mail;
 Auth::routes();
 
 
-Route::get('/', [IndexController::class, 'account'])->name('account');
+Route::get('/login', [IndexController::class, 'login'])->name('login');
+Route::get('/editor', [IndexController::class, 'editor'])->name('editor');
 
 
-Route::get('/qr-code', [IndexController::class, 'qr_code'])->name('qr_code');
-
-
-// Route::get('/clear-cache', function() {
-//     Artisan::call('cache:clear');
-//     return "Cache is cleared";
-// });
 
 
 Route::group(['middleware' => 'auth'], function()
 {
-    Route::get('/index', [HomeController::class, 'index_view'])->name('index_view');
+    Route::get('/', [HomeController::class, 'index'])->name('index');
 
     Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
     Route::get('/home', [HomeController::class, 'user_profile'])->name('user_profile');

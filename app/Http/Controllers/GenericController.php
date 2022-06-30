@@ -10,8 +10,7 @@ use Auth;
 use App\Models\User;
 use App\Models\attributes;
 use App\Models\role_assign;
-
-use App\Models\production_schedule;
+use App\Models\category;
 
 use Illuminate\Support\Str;
 use Session;
@@ -202,18 +201,97 @@ class GenericController extends Controller
                     </div>
                 </form>';
             return $body;
-        } elseif ($slug == 'fileUploader') {
-            $route_url = route('file_generator');
+        } elseif ($slug == 'product') {
+            $route_url = route('crud_generator', $slug);
             $body = '<form class="" id="generic-form" enctype="multipart/form-data" method="POST" action="'.$route_url.'">
                     <input type="hidden" name="_token" value="'.csrf_token().'">
                     <input type="hidden" name="record_id" id="record_id" value="">
                     <div class="row">
                         <div id="assignrole"></div>
-                        <div class="col-md-6 col-sm-6 col-6 im" id="rank-label">
+                        <div class="col-md-12 col-sm-6 col-12" id="rank-label">
                             <div class="form-group start-date">
-                                <label for="start-date" class="">File:</label>
+                                <label for="start-date" class="">Name:</label>
                                 <div class="d-flex">
-                                    <input type="file" name="file" class="form-control">
+                                    <input id="name" placeholder="Name" name="name" class="form-control" type="text" autocomplete="off" required/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-6" id="rank-label">
+                            <div class="form-group start-date">
+                                <label for="start-date" class="">Category:</label>
+                                <div class="d-flex">
+                                    <select name="category_id" id="category_id" class="form-control profession" required value="">
+                                        <option selected="true" disabled="disabled" >Select Category</option>';
+                                        $category= category::where("is_active",1)->where("is_deleted",0)->get();
+                                        if ($category) {
+                                            foreach($category as $k => $val){
+                                            $body.='<option value="'.$val->id.'">'.$val->name.'</option>';
+                                            }
+                                        }
+                            $body.='</select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-6" id="rank-label">
+                            <div class="form-group start-date">
+                                <label for="start-date" class="">Image:</label>
+                                <div class="d-flex">
+                                    <input type="file" id="image" accept="image/*" name="image" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-6 col-6" id="rank-label">
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-6" id="rank-label">
+                            <div class="form-group start-date">
+                                <div class="d-flex">
+                                    <td><img id="image-add" style="width:80px;height:80px;display:none;" src=""></td>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 col-sm-6 col-12" id="rank-label">
+                            <div class="form-group start-date">
+                                <label for="start-date" class="">Price:</label>
+                                <div class="d-flex">
+                                    <input id="price" placeholder="Price" name="price" class="form-control" type="number" autocomplete="off" required/>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-12 col-sm-6 col-12" id="role-label">
+                            <div class="form-group end-date">
+                                <label for="end-date" class="">Description:</label>
+                                <div class="d-flex">
+                                    <textarea id="description" required name="description" class="form-control" ></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-6 col-12" id="role-label">
+                            <div class="form-group end-date">
+                                <label for="end-date" class="">Specification:</label>
+                                <div class="d-flex">
+                                    <textarea id="specification" required name="specification" class="form-control" ></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>';
+            return $body;
+        } elseif ($slug == 'category') {
+            $route_url = route('crud_generator', $slug);
+            $body = '<form class="" id="generic-form" enctype="multipart/form-data" method="POST" action="'.$route_url.'">
+                    <input type="hidden" name="_token" value="'.csrf_token().'">
+                    <input type="hidden" name="record_id" id="record_id" value="">
+                    <div class="row">
+                        <div id="assignrole"></div>
+                        <div class="col-md-12 col-sm-6 col-12" id="rank-label">
+                            <div class="form-group start-date">
+                                <label for="start-date" class="">Name:</label>
+                                <div class="d-flex">
+                                    <input id="name" placeholder="Name" name="name" class="form-control" type="text" autocomplete="off" required/>
                                 </div>
                             </div>
                         </div>
@@ -279,31 +357,41 @@ class GenericController extends Controller
                                 $resp['body'] = $body;
                                 $resp['script'] = $script;
                                 return $resp;
-        } elseif ($slug == "fileUploader") {
-            $loop = production_schedule::where("is_active" ,1)->get();
+        } elseif ($slug == "product") {
+            $data = 'App\Models\\'.$slug;
+            $loop = $data::where("is_active" ,1)->where("is_deleted" ,0)->get();
             if ($loop) {
             $body = '<thead>
                                        <tr>
                                           <th>S. No</th>
-                                          <th>Batch</th>
-                                          <th>Product</th>
-                                          <th>MRP</th>
-                                          <th>Quantity</th>
-                                          <th>size</th>
+                                          <th>Name</th>
+                                          <th>Category</th>
+                                          <th>Price</th>
+                                          <th>Description</th>
+                                          <th>Specification</th>
+                                          <th>Image</th>
                                           <th>Creation Date</th>
+                                          <th>Action</th>
                                        </tr>
                                     </thead>
                                     <tbody>';
                                        if($loop) {
                                        foreach($loop as $key => $val){
-                                        $body .= '<tr>
+                                        $i=asset($val->image);
+                                        $category= category::where('is_active',1)->where('is_deleted',0)->where('id',$val->category_id)->first();
+                                       $body .= '<tr>
                                           <td>'.++$key.'</td> 
-                                          <td>'.$val->batch.'</td>
-                                          <td>'.$val->product.'</td>
-                                          <td>'.$val->mrp.'</td>
-                                          <td>'.$val->quantity.'</td>
-                                          <td>'.$val->size.'</td>
+                                          <td>'.$val->name.'</td> 
+                                          <td>'.$category->name.'</td> 
+                                          <td>$'.$val->price.'</td> 
+                                          <td>'.$val->description.'</td> 
+                                          <td>'.$val->specification.'</td> 
+                                          <td><img style="width:80px;height:80px;" src="'.$i.'"></td>
                                           <td>'.date("M d,Y" ,strtotime($val->created_at)).'</td>
+                                          <td>
+                                             <button type="button" class="btn btn-primary editor-form" data-edit_id= "'.$val->id.'" data-name= "'.$val->name.'" data-description= "'.$val->description.'" data-category_id= "'.$val->category_id.'" data-price= "'.$val->price.'" data-image= "'.$i.'" data-specification= "'.$val->specification.'" >Edit</button>
+                                             <button type="button" class="btn btn-danger delete-record" data-model="'.$data.'" data-id= "'.$val->id.'" >Delete</button>
+                                          </td>
                                        </tr>';
                                        }
                                    }
@@ -311,16 +399,75 @@ class GenericController extends Controller
                                     <tfoot>
                                        <tr>
                                           <th>S. No</th>
-                                          <th>Batch</th>
-                                          <th>Product</th>
-                                          <th>MRP</th>
-                                          <th>Quantity</th>
-                                          <th>size</th>
+                                          <th>Name</th>
+                                          <th>Category</th>
+                                          <th>Price</th>
+                                          <th>Description</th>
+                                          <th>Specification</th>
+                                          <th>Image</th>
                                           <th>Creation Date</th>
+                                          <th>Action</th>
                                        </tr>
                                     </tfoot>';
                                 }
-                                $script = '';
+                                $script = '$("body").on("click" ,".editor-form",function(){
+                                                $("#name").val($(this).data("name"))
+                                                $("#category_id").val($(this).data("category_id"))
+                                                $("#price").val($(this).data("price"))
+                                                $("#record_id").val($(this).data("edit_id"))
+                                                var description = $(this).data("description");
+                                                CKEDITOR.instances.description.setData(description);
+                                                var specification = $(this).data("specification");
+                                                CKEDITOR.instances.specification.setData(specification);
+                                                $("#image").removeAttr("required");
+                                                $("#image-add").css("display","");
+                                                $("#image-add").attr("src",$(this).data("image"));
+                                                $("#addevent").modal("show")
+                                            })';
+                                $resp['body'] = $body;
+                                $resp['script'] = $script;
+                                return $resp;
+        } elseif ($slug == "category") {
+            $data = 'App\Models\\'.$slug;
+            $loop = $data::where("is_active" ,1)->where("is_deleted" ,0)->get();
+            if ($loop) {
+            $body = '<thead>
+                                       <tr>
+                                          <th>S. No</th>
+                                          <th>Name</th>
+                                          <th>Creation Date</th>
+                                          <th>Action</th>
+                                       </tr>
+                                    </thead>
+                                    <tbody>';
+                                       if($loop) {
+                                       foreach($loop as $key => $val){
+                                       $body .= '<tr>
+                                          <td>'.++$key.'</td> 
+                                          <td>'.$val->name.'</td> 
+                                          <td>'.date("M d,Y" ,strtotime($val->created_at)).'</td>
+                                          <td>
+                                             <button type="button" class="btn btn-primary editor-form" data-edit_id= "'.$val->id.'" data-name= "'.$val->name.'" >Edit</button>
+                                             <button type="button" class="btn btn-danger delete-record" data-model="'.$data.'" data-id= "'.$val->id.'" >Delete</button>
+                                          </td>
+                                       </tr>';
+                                       }
+                                   }
+                                    $body .= '</tbody>
+                                    <tfoot>
+                                       <tr>
+                                          <th>S. No</th>
+                                          <th>Name</th>
+                                          <th>Creation Date</th>
+                                          <th>Action</th>
+                                       </tr>
+                                    </tfoot>';
+                                }
+                                $script = '$("body").on("click" ,".editor-form",function(){
+                                                $("#name").val($(this).data("name"))
+                                                $("#record_id").val($(this).data("edit_id"))
+                                                $("#addevent").modal("show")
+                                            })';
                                 $resp['body'] = $body;
                                 $resp['script'] = $script;
                                 return $resp;
@@ -432,44 +579,16 @@ class GenericController extends Controller
     }
     public function crud_generator($slug='' , Request $request)
     {
-        $token_ignore = ['_token' => '' , 'record_id' => '' , 'image' => '', 'finish_caliper' => '' , 'note' => ''];
+        $token_ignore = ['_token' => '' , 'record_id' => '' , 'image' => ''];
         $post_feilds = array_diff_key($_POST , $token_ignore);
-        // dd($post_feilds);
         $data = 'App\Models\\'.$slug;
-        if (isset($_POST['name']) && $_POST['name'] != '') {
+        if ($slug == 'category' || $slug == 'product') {
             $s = $_POST['name'];
-            $s = str_replace(' ', '', $s);
+            $s = str_replace(' ', '-', $s);
             $s = strtolower($s);
             $post_feilds['slug'] = $s;
         }
-        if ($slug == 'car_details') {
-            $new_str = str_replace(str_split('\\/:*?"<>|,.()-_'), '', $_POST['model']);
-            $str = str_replace(" ","",$new_str);
-            $strlower = strtolower($str);
-            $drill = str_replace(str_split('\\/:*?"<>|,.()-_'), '', $_POST['drilled_no']);
-            $drillstr = str_replace(" ","",$drill);
-            $drilllower = strtolower($drillstr);
-            $slug = $strlower."-".$drilllower;
-            $post_feilds['slug'] = $slug;
-            
-            if (isset($_POST['finish_caliper']) && $_POST['finish_caliper'] != '') {
-                $post_feilds['finish_caliper'] = serialize($_POST['finish_caliper']);
-            } else{
-                $post_feilds['finish_caliper'] = null;
-            }
-            if (isset($_POST['note']) && $_POST['note'] != '') {
-                $post_feilds['note'] = serialize($_POST['note']);
-            } else{
-                $post_feilds['note'] = null;
-            }
-            foreach ($post_feilds as $key => $value) {
-                if (!(isset($post_feilds[$key]) && $post_feilds[$key] != '')) {
-                    $post_feilds[$key] = null;
-                }
-            }
-            // dd($post_feilds,$_POST);
-        }
-        $extension=array("jpeg","jpg","png");
+        $extension=array("jpeg","jpg","png","jfif");
         if (isset($request->image)) {
             $file = $request->image;
             $ext = $request->image->getClientOriginalExtension();
@@ -485,30 +604,15 @@ class GenericController extends Controller
                 return redirect()->back()->with('error', "Error Code: ".$msg);
             }
         }
-        if (isset($request->banner)) {
-            $file = $request->banner;
-            $ext = $request->banner->getClientOriginalExtension();
-            if(in_array($ext,$extension)) {
-                $file_name = $request->banner->getClientOriginalName();
-                $file_name = substr($file_name, 0, strpos($file_name, "."));
-                $name = "uploads/product/banner/" .$file_name."_".time().'.'.$file->getClientOriginalExtension();
-                $destinationPath = public_path().'/uploads/product/banner/';
-                $share = $request->banner->move($destinationPath,$name);
-                $post_feilds['banner'] = $name;
-            } else{
-                $msg = "This File type is not Supported!";
-                return redirect()->back()->with('error', "Error Code: ".$msg);
-            }
-        }
         try {
             if (isset($_POST['record_id']) && $_POST['record_id'] != '') {
                 $create = $data::where("id" , $_POST['record_id'])->update($post_feilds);
                 $msg = "Record has been updated";
             } else{
-                if ($slug == 'car_details') {
-                    $check_record = car_details::where('is_active',1)->where('slug',$slug)->first();
+                if ($slug == 'category') {
+                    $check_record = category::where('is_active',1)->where('slug',$post_feilds['slug'])->first();
                     if ($check_record) {
-                        $msg = "This Product already exists";
+                        $msg = "This Category already exists";
                         return redirect()->back()->with('error',$msg);
                     }
                 }
@@ -538,133 +642,6 @@ class GenericController extends Controller
             return json_encode($status);
         }
     }
-    public function switch_top_category(Request $request){
-        try{
-            $cat_id = $_POST['cat_id'];
-            $category = category::where("is_active" ,1)->where("is_deleted" ,0)->where("id",$cat_id)->first();
-            if ($category->is_top == 0) {
-                $post_feilds['is_top'] = 1;
-                $status['message'] = "Category has been marked as Top Category";
-            } else{
-                $post_feilds['is_top'] = 0;
-                $status['message'] = "Category has been removed from Top Categories";
-            }
-            $update = category::where("id" , $cat_id)->update($post_feilds);
-            $status['status'] = 1;
-            return json_encode($status);
-        }catch(Exception $e) {
-            $error = $e->getMessage();
-            $status['message'] = $error;
-            $status['status'] = 0;
-            return json_encode($status);
-        }
-        
-    }
-    public function active_ads(Request $request){
-        try{
-            $ad_id = $_POST['ad_id'];
-            $ad = ads::where("is_deleted" ,0)->where("id",$ad_id)->first();
-            if ($ad->is_active == 0) {
-                $post_feilds['is_active'] = 1;
-                $status['message'] = "Ad has been Activated";
-            } else{
-                $post_feilds['is_active'] = 0;
-                $status['message'] = "Ad has been Deactivated";
-            }
-            $update = ads::where("id" , $ad_id)->update($post_feilds);
-            $status['status'] = 1;
-            return json_encode($status);
-        }catch(Exception $e) {
-            $error = $e->getMessage();
-            $status['message'] = $error;
-            $status['status'] = 0;
-            return json_encode($status);
-        }
-        
-    }
-    public function featured_product(Request $request){
-        try{
-            $product_id = $_POST['product_id'];
-            $product = car_details::where("is_active" ,1)->where("is_deleted" ,0)->where("id",$product_id)->first();
-            if ($product->is_featured == 0) {
-                $post_feilds['is_featured'] = 1;
-                $status['message'] = "Product has been marked as Featured Product";
-            } else{
-                $post_feilds['is_featured'] = 0;
-                $status['message'] = "Product has been removed from Featured Product";
-            }
-            $update = car_details::where("id" , $product_id)->update($post_feilds);
-            $status['status'] = 1;
-            return json_encode($status);
-        }catch(Exception $e) {
-            $error = $e->getMessage();
-            $status['message'] = $error;
-            $status['status'] = 0;
-            return json_encode($status);
-        }
-        
-    }
-    public function best_seller(Request $request){
-        try{
-            $product_id = $_POST['product_id'];
-            $product = car_details::where("is_active" ,1)->where("is_deleted" ,0)->where("id",$product_id)->first();
-            if ($product->best_seller == 0) {
-                $post_feilds['best_seller'] = 1;
-                $status['message'] = "Product has been marked as Best Seller";
-            } else{
-                $post_feilds['best_seller'] = 0;
-                $status['message'] = "Product has been removed from Best Seller";
-            }
-            $update = car_details::where("id" , $product_id)->update($post_feilds);
-            $status['status'] = 1;
-            return json_encode($status);
-        }catch(Exception $e) {
-            $error = $e->getMessage();
-            $status['message'] = $error;
-            $status['status'] = 0;
-            return json_encode($status);
-        }
-        
-    }
 
-    public function remove_sale(Request $request){
-        try{
-            $product_id = $_POST['product_id'];
-            $car_feilds['is_sale'] = 0;
-            $status['message'] = "Product Sale has been removed";
-            $update = car_details::where("id" , $product_id)->update($car_feilds);
-            $status['status'] = 1;
-            return json_encode($status);
-        }catch(Exception $e) {
-            $error = $e->getMessage();
-            $status['message'] = $error;
-            $status['status'] = 0;
-            return json_encode($status);
-        }
-        
-    }
-
-    public function sale_detail(Request $request){
-        try{
-            $product_id = $_POST['product_id'];
-            $product = car_sale::where("product_id" , $product_id)->first();
-            dd($product->start_date);
-            if ($product) {
-                $status['status'] = 1;
-                $status['dis_percentage'] = $product->dis_percentage;
-                $status['start_date'] = date("d-M-Y H:i:s" ,strtotime($product->start_date));
-                $status['end_date'] = date("d-M-Y H:i:s" ,strtotime($product->end_date));
-            } else{
-                $status['status'] = 0;
-            }
-            return json_encode($status);
-        }catch(Exception $e) {
-            $error = $e->getMessage();
-            $status['message'] = $error;
-            $status['status'] = 0;
-            return json_encode($status);
-        }
-        
-    }
     
 }

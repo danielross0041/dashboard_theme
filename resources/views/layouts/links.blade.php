@@ -15,6 +15,19 @@
 <link rel="stylesheet" href="{{asset('vendors/jquery-ui/jquery-ui.min.css')}}">
 <link rel="stylesheet" href="{{asset('vendors/jquery-ui/jquery-ui.theme.min.css')}}">
 @auth
+<!-- Amazon -->
+
+
+
+
+
+
+
+
+
+
+
+
 <link rel="stylesheet" href="{{asset('vendors/simple-line-icons/css/simple-line-icons.css')}}">        
 <link rel="stylesheet" href="{{asset('vendors/flags-icon/css/flag-icon.min.css')}}">         
 <link rel="stylesheet" href="{{asset('vendors/cryptofont/cryptofont.css')}}">         

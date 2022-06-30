@@ -41,12 +41,13 @@ class IndexController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
 
-    public function index(){
-        return view('web.index');
-    }
-    public function qr_code()
+    public function login()
     {
-        return view('web.qr_code');
+        return view('auth.login');
+    }
+    public function editor()
+    {
+        return view('admin.editor');
     }
     
     
